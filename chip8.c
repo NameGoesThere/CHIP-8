@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
         uint32_t currTime = SDL_GetTicks();
         ticks += (currTime - startTime) / 16.6;
 
-        if (ticks >= 1)
+        if (ticks >= 1) /* TODO: Make the sound timer actually play sound. */
         {
             if (DT > 0)
                 --DT;
