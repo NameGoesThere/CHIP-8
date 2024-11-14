@@ -14,4 +14,4 @@ clean:
 	rm -f chip8
 
 test: chip8
-	./chip8 "test.c8"
+	./chip8 "test.ch8"
