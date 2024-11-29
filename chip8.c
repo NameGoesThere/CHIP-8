@@ -93,6 +93,22 @@ int main(int argc, char *argv[])
 
     double ticks = 0; /* Add 60ths of a second taken to calculate the instruction. When >= 1, decrement ticks, ST, and DT. */
 
+    #define CALCULATE_TIMERS \
+    { \
+      \
+        uint32_t currTime = SDL_GetTicks(); \
+        ticks += (currTime - startTime) / 16.6; \
+\
+        if (ticks >= 1) /* TODO: Make the sound timer actually play sound. */ \
+        { \
+            if (DT > 0) \
+                --DT; \
+            if (ST > 0) \
+                --ST; \
+            --ticks; \
+        } \
+    }
+
     const uint8_t *state = SDL_GetKeyboardState(NULL);
 
     for (int i = 0; i < SPRITES; ++i) /* Load some sprites into memory. */
@@ -360,6 +376,7 @@ int main(int argc, char *argv[])
                     case 10: /* Pause execution until a key is pressed, and then store the key value in a register. */
                         while (1)
                         {
+                            CALCULATE_TIMERS;
                             uint8_t done = 0;
                             SDL_PumpEvents();
                             for (int i = 0; i < KEY_COUNT; ++i)
@@ -467,17 +484,7 @@ int main(int argc, char *argv[])
 
         SDL_RenderPresent(renderer);
 
-        uint32_t currTime = SDL_GetTicks();
-        ticks += (currTime - startTime) / 16.6;
-
-        if (ticks >= 1) /* TODO: Make the sound timer actually play sound. */
-        {
-            if (DT > 0)
-                --DT;
-            if (ST > 0)
-                --ST;
-            --ticks;
-        }
+        CALCULATE_TIMERS;
     }
 
     return 0;
